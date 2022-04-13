@@ -30,7 +30,7 @@ dataService.prototype.addData = function (obj) {
             heartRate: obj.heartRate,
             spO: obj.spO,
         }
-        if (dataArray.length >= 3) {
+        if (dataArray.length >= 100) {
             dataArray.shift();
             dataArray.push(dataObject);
         } else {
@@ -46,6 +46,10 @@ dataService.prototype.addData = function (obj) {
         dataArray.push(dataObject);
         this.dataTable.set(obj.id, dataArray);
     }
+}
+
+dataService.prototype.returnDataArray= function(id){
+    return this.dataTable.get(id);
 }
 
 module.exports = {

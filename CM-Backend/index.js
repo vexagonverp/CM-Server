@@ -21,7 +21,26 @@ app.post('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    let intervalId;
+    console.log('User connected: '+socket.id);
+    socket.on('message', (data) => {
+        const obj = JSON.parse(JSON.stringify(data, null, 2));
+        let dataArray = dataServiceInstance.returnDataArray(obj.id);
+        if(intervalId){
+            clearInterval(intervalId);
+        }
+        if(dataArray){
+            intervalId=setInterval(function(){
+                io.to(socket.id).emit('message',dataArray[dataArray.length-1]); 
+            }, 5000);
+        }
+    });
+    socket.on('disconnect', () => {
+        console.log('User disconnected: '+socket.id);
+        if(intervalId){
+            clearInterval(intervalId);
+        }
+    });
 });
 
 server.listen(3000, () => {
