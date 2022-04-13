@@ -59,10 +59,13 @@ dataService.prototype.predictArima = function (id, minute) {
     }
     let heartArray;
     let spoArray;
-    if (!minute && Number(minute) < this.dataCacheSize * this.dataTimeInterval) {
+    if (!minute || Number(minute) > (this.dataCacheSize * this.dataTimeInterval)/60) {
         heartArray = dataArray.slice(-10).filter(element => element).map(element => element.heartRate);
         spoArray = dataArray.slice(-10).filter(element => element).map(element => element.spO);
     } else {
+        if (Number(minute) <= 0) {
+            minute = 1;
+        }
         let minutePercentage = Number(minute) / ((this.dataCacheSize * this.dataTimeInterval) / 60);
         heartArray = [];
         spoArray = [];
