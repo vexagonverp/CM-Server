@@ -31,7 +31,13 @@ io.on('connection', (socket) => {
         }
         if(dataArray){
             intervalId=setInterval(function(){
-                io.to(socket.id).emit('message',dataArray[dataArray.length-1]); 
+                const [predHeart, errorHeart,predSpo,errorSpo]=dataServiceInstance.predictArima(obj.id,3);
+                let dataObject = dataArray[dataArray.length-1];
+                dataObject.predHeart = Math.round(predHeart[0]);
+                dataObject.errorHeart = errorHeart[0].toFixed(2);
+                dataObject.predSpo = Math.round(predSpo[0]);
+                dataObject.errorSpo = errorSpo[0].toFixed(2);
+                io.to(socket.id).emit('message',dataObject); 
             }, 5000);
         }
     });
