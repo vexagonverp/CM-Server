@@ -2,8 +2,8 @@ const ARIMA = require('arima')
 
 function dataService() {
     this.dataTable = new Map();
-    this.dataCacheSize=100;
-    this.dataTimeInterval=10;
+    this.dataCacheSize = 100;
+    this.dataTimeInterval = 10;
 }
 
 dataService.prototype.processRawData = function (obj) {
@@ -52,29 +52,32 @@ dataService.prototype.addData = function (obj) {
     }
 }
 
-dataService.prototype.predictArima = function(id,minute){
+dataService.prototype.predictArima = function (id, minute) {
     const dataArray = this.dataTable.get(id);
+    if (dataArray.length < 5) {
+        return;
+    }
     let heartArray;
     let spoArray;
-    if(!minute && Number(minute)<this.dataCacheSize*this.dataTimeInterval){
+    if (!minute && Number(minute) < this.dataCacheSize * this.dataTimeInterval) {
         heartArray = dataArray.slice(-10).filter(element => element).map(element => element.heartRate);
         spoArray = dataArray.slice(-10).filter(element => element).map(element => element.spO);
-    }else{
-        let minutePercentage = Number(minute)/((this.dataCacheSize*this.dataTimeInterval)/60);
-        heartArray=[];
-        spoArray=[];
-        for (let i = 0; i < 1; i=i+minutePercentage) {
-            heartArray.push(Number(dataArray[Math.floor(i*(dataArray.length-1))].heartRate));
-            spoArray.push(Number(dataArray[Math.floor(i*(dataArray.length-1))].spO));
+    } else {
+        let minutePercentage = Number(minute) / ((this.dataCacheSize * this.dataTimeInterval) / 60);
+        heartArray = [];
+        spoArray = [];
+        for (let i = 0; i < 1; i = i + minutePercentage) {
+            heartArray.push(Number(dataArray[Math.floor(i * (dataArray.length - 1))].heartRate));
+            spoArray.push(Number(dataArray[Math.floor(i * (dataArray.length - 1))].spO));
         }
     }
-    const autoarimaHeart = new ARIMA({ auto: true,verbose: false }).fit(heartArray);
-    const autoarimaSpo = new ARIMA({ auto: true,verbose: false }).fit(spoArray);
+    const autoarimaHeart = new ARIMA({ auto: true, verbose: false }).fit(heartArray);
+    const autoarimaSpo = new ARIMA({ auto: true, verbose: false }).fit(spoArray);
     //const [pred, errors] = autoarima.predict(1);
     return autoarimaHeart.predict(1).concat(autoarimaSpo.predict(1));
 }
 
-dataService.prototype.returnDataArray= function(id){
+dataService.prototype.returnDataArray = function (id) {
     return this.dataTable.get(id);
 }
 

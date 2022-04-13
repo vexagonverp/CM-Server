@@ -22,28 +22,33 @@ app.post('/', (req, res) => {
 
 io.on('connection', (socket) => {
     let intervalId;
-    console.log('User connected: '+socket.id);
+    console.log('User connected: ' + socket.id);
     socket.on('message', (data) => {
         const obj = JSON.parse(JSON.stringify(data, null, 2));
         let dataArray = dataServiceInstance.returnDataArray(obj.id);
-        if(intervalId){
+        if (intervalId) {
             clearInterval(intervalId);
         }
-        if(dataArray){
-            intervalId=setInterval(function(){
-                const [predHeart, errorHeart,predSpo,errorSpo]=dataServiceInstance.predictArima(obj.id,3);
-                let dataObject = dataArray[dataArray.length-1];
-                dataObject.predHeart = Math.round(predHeart[0]);
-                dataObject.errorHeart = errorHeart[0].toFixed(2);
-                dataObject.predSpo = Math.round(predSpo[0]);
-                dataObject.errorSpo = errorSpo[0].toFixed(2);
-                io.to(socket.id).emit('message',dataObject); 
+        if (dataArray) {
+            intervalId = setInterval(function () {
+                let dataObject = dataArray[dataArray.length - 1];
+                try {
+                    const [predHeart, errorHeart, predSpo, errorSpo] = dataServiceInstance.predictArima(obj.id, 3);
+                    dataObject.predHeart = Math.round(predHeart[0]);
+                    dataObject.errorHeart = errorHeart[0].toFixed(2);
+                    dataObject.predSpo = Math.round(predSpo[0]);
+                    dataObject.errorSpo = errorSpo[0].toFixed(2);
+                } catch (err) {
+
+                } finally {
+                    io.to(socket.id).emit('message', dataObject);
+                }
             }, 5000);
         }
     });
     socket.on('disconnect', () => {
-        console.log('User disconnected: '+socket.id);
-        if(intervalId){
+        console.log('User disconnected: ' + socket.id);
+        if (intervalId) {
             clearInterval(intervalId);
         }
     });
