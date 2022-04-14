@@ -15,8 +15,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.post('/', (req, res) => {
+app.post('/sendData', (req, res) => {
     const obj = dataServiceInstance.processRawData(JSON.parse(JSON.stringify(req.body, null, 2)));
+    res.send(obj);
+});
+
+app.get('/getKeys', (req, res) => {
+    const obj = dataServiceInstance.returnDataKey();
     res.send(obj);
 });
 

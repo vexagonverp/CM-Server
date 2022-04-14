@@ -3,6 +3,7 @@ const ARIMA = require('arima')
 function dataService() {
     this.dataTable = new Map();
     this.dataCacheSize = 100;
+    this.dataDefaultTimeInterval = 10;
     this.dataTimeInterval = 10;
 }
 
@@ -82,6 +83,10 @@ dataService.prototype.predictArima = function (id, minute) {
 
 dataService.prototype.returnDataArray = function (id) {
     return this.dataTable.get(id);
+}
+
+dataService.prototype.returnDataKey = function () {
+    return Array.from(this.dataTable.keys());
 }
 
 module.exports = {
