@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
         }
         if (dataArray) {
             intervalId = setInterval(function () {
-                let dataObject = dataArray[dataArray.length - 1];
+                let dataObject = Object.assign({},dataArray[dataArray.length - 1]);
                 try {
                     const [predHeart, errorHeart, predSpo, errorSpo] = dataServiceInstance.predictArima(obj.id, obj.minute);
                     dataObject.predHeart = Math.round(predHeart[0]);
