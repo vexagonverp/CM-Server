@@ -29,10 +29,11 @@ function App() {
 
   const socketRef = useRef();
   const provinceData = ['Zhejiang', 'Jiangsu'];
-  const [minuteInput, setMinute] = useState();
+  const [minuteInput, setMinuteInput] = useState();
+  const [minutePredict, setMinutePredict] = useState();
 
   const onChangeMinute = (value) => {
-    setMinute(value);
+    setMinuteInput(value);
   };
 
   useEffect(() => {
@@ -56,6 +57,7 @@ function App() {
       id: '98CDAC26018C',
       minute: minuteInput ? minuteInput : 1,
     };
+    setMinutePredict(minuteInput ? minuteInput : 1);
     socketRef.current.emit('message', mes);
   };
 
@@ -97,7 +99,9 @@ function App() {
                   </Space>
                 </Col>
               </Row>
-              <Divider orientation='left'>Prediction</Divider>
+              <Divider orientation='left'>
+                Prediction in next {minutePredict} minutes
+              </Divider>
               <Row>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                   <Badge count={mess.errorHeart}>
