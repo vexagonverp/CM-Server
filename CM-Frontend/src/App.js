@@ -22,7 +22,6 @@ import {
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import socketIOClient from 'socket.io-client';
-import './App.css';
 const host = 'http://localhost:3000';
 const { Header, Footer, Content } = Layout;
 const { Link } = Anchor;
