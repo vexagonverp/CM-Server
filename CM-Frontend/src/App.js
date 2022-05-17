@@ -117,40 +117,50 @@ function App() {
               </Divider>
               <Row>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Badge count={mess.errorHeart}>
-                    <Statistic
-                      title='Prediction heart rate'
-                      prefix={
-                        (
-                          mess.predHeart *
-                          ((100 - Math.abs(mess.errorHeart)) / 100)
-                        ).toFixed(2) + ' - '
-                      }
-                      value={(
+                  <Statistic
+                    title='Predicted heart rate'
+                    prefix={
+                      (
                         mess.predHeart *
-                        ((100 + Math.abs(mess.errorHeart)) / 100)
-                      ).toFixed(2)}
-                      suffix='bpm'
-                    />
-                  </Badge>
+                        ((100 - Math.abs(mess.errorHeart)) / 100)
+                      ).toFixed(2) + ' - '
+                    }
+                    value={(
+                      mess.predHeart *
+                      ((100 + Math.abs(mess.errorHeart)) / 100)
+                    ).toFixed(2)}
+                    suffix='bpm'
+                  />
                 </Col>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Badge count={mess.errorSpo}>
-                    <Statistic
-                      title='Prediction SpO2'
-                      prefix={
-                        (
-                          mess.predSpo *
-                          ((100 - Math.abs(mess.errorSpo)) / 100)
-                        ).toFixed(2) + ' - '
-                      }
-                      value={(
+                  <Statistic
+                    title='Predicted SpO2'
+                    prefix={
+                      (
                         mess.predSpo *
-                        ((100 + Math.abs(mess.errorSpo)) / 100)
-                      ).toFixed(2)}
-                      suffix='%'
-                    />
-                  </Badge>
+                        ((100 - Math.abs(mess.errorSpo)) / 100)
+                      ).toFixed(2) + ' - '
+                    }
+                    value={(
+                      mess.predSpo *
+                      ((100 + Math.abs(mess.errorSpo)) / 100)
+                    ).toFixed(2)}
+                    suffix='%'
+                  />
+                </Col>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                  <Statistic
+                    title='Predicted heart rate error variance'
+                    value={Math.abs(mess.errorHeart).toFixed(2)}
+                    suffix='%'
+                  />
+                </Col>
+                <Col xs={24} sm={12} md={12} lg={12} xl={12}>
+                  <Statistic
+                    title='Predicted SpO2 error variance'
+                    value={Math.abs(mess.errorSpo).toFixed(2)}
+                    suffix='%'
+                  />
                 </Col>
               </Row>
             </Card>
