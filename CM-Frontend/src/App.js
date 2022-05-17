@@ -28,19 +28,25 @@ function App() {
   const [mess, setMess] = useState([]);
 
   const socketRef = useRef();
-  const provinceData = ['Zhejiang', 'Jiangsu'];
+  const [patientArr, setPatientArr] = useState([]);
   const [minuteInput, setMinuteInput] = useState();
   const [minutePredict, setMinutePredict] = useState();
+  const [patientId, setPatientId] = useState();
 
   const onChangeMinute = (value) => {
     setMinuteInput(value);
   };
 
+  const onChangePatient = (value) => {
+    setPatientId(value);
+  };
+
   useEffect(() => {
     socketRef.current = socketIOClient.connect(host);
-
+    fetch('http://localhost:3000/getKeys')
+      .then((response) => response.json())
+      .then((data) => setPatientArr(data));
     socketRef.current.on('message', (dataGot) => {
-      //console.log(dataGot);
       setMess(dataGot);
     });
 
@@ -50,15 +56,14 @@ function App() {
   }, []);
 
   const sendMessage = () => {
-    fetch('http://localhost:3000/getKeys')
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-    const mes = {
-      id: '98CDAC26018C',
-      minute: minuteInput ? minuteInput : 1,
-    };
-    setMinutePredict(minuteInput ? minuteInput : 1);
-    socketRef.current.emit('message', mes);
+    if (patientId != null) {
+      const mes = {
+        id: patientId,
+        minute: minuteInput ? minuteInput : 1,
+      };
+      setMinutePredict(minuteInput ? minuteInput : 1);
+      socketRef.current.emit('message', mes);
+    }
   };
 
   return (
@@ -142,13 +147,14 @@ function App() {
               </Row>
               <Divider orientation='left'>Submit</Divider>
               <Row>
-                <Col xs={24} sm={8} md={6} lg={6} xl={6}>
+                <Col xs={24} sm={8} md={8} lg={8} xl={8}>
                   <Select
-                    defaultValue={provinceData[0]}
-                    style={{ width: 70 + '%' }}
+                    defaultValue={patientArr[0]}
+                    style={{ width: 80 + '%' }}
+                    onChange={onChangePatient}
                   >
-                    {provinceData.map((province) => (
-                      <Option key={province}>{province}</Option>
+                    {patientArr.map((patientId) => (
+                      <Option key={patientId.id}>{patientId.id}</Option>
                     ))}
                   </Select>
                 </Col>
