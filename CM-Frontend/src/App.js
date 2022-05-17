@@ -32,7 +32,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const socketRef = useRef();
   const [patientArr, setPatientArr] = useState([]);
-  const [minuteInput, setMinuteInput] = useState();
+  const [minuteInput, setMinuteInput] = useState(1);
   const [minutePredict, setMinutePredict] = useState();
   const [patientId, setPatientId] = useState();
 
@@ -201,6 +201,7 @@ function App() {
                       Predict next {minuteInput} minute&#40;s&#41;
                     </Text>
                     <Slider
+                      marks={{ 1: 1, 3: 3, 5: 5, 8: 8 }}
                       min={1}
                       max={8}
                       step={0.5}
