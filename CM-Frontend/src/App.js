@@ -113,7 +113,7 @@ function App() {
                 </Col>
               </Row>
               <Divider orientation='left'>
-                Prediction in next {minutePredict} minutes
+                Prediction in next {minutePredict} minute&#40;s&#41;
               </Divider>
               <Row>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -197,7 +197,9 @@ function App() {
                 </Col>
                 <Col xs={12} sm={8} md={8} lg={8} xl={8}>
                   <Space direction='vertical' style={{ width: '100%' }}>
-                    <Text type='secondary'>Prediction in minutes</Text>
+                    <Text type='secondary'>
+                      Predict next {minuteInput} minute&#40;s&#41;
+                    </Text>
                     <Slider
                       min={1}
                       max={8}
