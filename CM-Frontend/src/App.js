@@ -14,19 +14,23 @@ import {
   Space,
   Select,
   Slider,
-  InputNumber,
 } from 'antd';
+import {
+  LinkOutlined,
+  GithubOutlined,
+  DisconnectOutlined,
+} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import socketIOClient from 'socket.io-client';
 import './App.css';
 const host = 'http://localhost:3000';
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 const { Link } = Anchor;
 const { Text } = Typography;
 const { Option } = Select;
 function App() {
   const [mess, setMess] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const socketRef = useRef();
   const [patientArr, setPatientArr] = useState([]);
   const [minuteInput, setMinuteInput] = useState();
@@ -56,6 +60,7 @@ function App() {
   }, []);
 
   const sendMessage = () => {
+    setLoading(true);
     if (patientId != null) {
       const mes = {
         id: patientId,
@@ -63,17 +68,21 @@ function App() {
       };
       setMinutePredict(minuteInput ? minuteInput : 1);
       socketRef.current.emit('message', mes);
+      socketRef.current.once('message', (dataGot) => {
+        setMess(dataGot);
+        setLoading(false);
+      });
     }
   };
 
   return (
     <Layout>
       <Header></Header>
-      <Content style={{ height: 100 + 'vh' }}>
+      <Content>
         <Row>
           <Col xs={1} sm={1} md={2} lg={3} xl={3}></Col>
           <Col xs={22} sm={22} md={20} lg={18} xl={18}>
-            <Card title='Covid monitoring'>
+            <Card title='Covid monitoring' loading={loading}>
               <Divider orientation='left'>Patient's information</Divider>
               <Row>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -145,27 +154,59 @@ function App() {
                   </Badge>
                 </Col>
               </Row>
-              <Divider orientation='left'>Submit</Divider>
+            </Card>
+          </Col>
+          <Col xs={1} sm={1} md={2} lg={3} xl={3}></Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+            <Space
+              direction='horizontal'
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              {loading ? (
+                <DisconnectOutlined
+                  style={{
+                    fontSize: 32,
+                    padding: 20,
+                  }}
+                />
+              ) : (
+                <LinkOutlined
+                  style={{
+                    fontSize: 32,
+                    padding: 20,
+                  }}
+                />
+              )}
+            </Space>
+          </Col>
+          <Col xs={1} sm={1} md={2} lg={3} xl={3}></Col>
+          <Col xs={22} sm={22} md={20} lg={18} xl={18}>
+            <Card title='Data submission'>
               <Row>
                 <Col xs={24} sm={8} md={8} lg={8} xl={8}>
-                  <Select
-                    defaultValue={patientArr[0]}
-                    style={{ width: 80 + '%' }}
-                    onChange={onChangePatient}
-                  >
-                    {patientArr.map((patientId) => (
-                      <Option key={patientId.id}>{patientId.id}</Option>
-                    ))}
-                  </Select>
+                  <Space direction='vertical' style={{ width: '100%' }}>
+                    <Text type='secondary'>Patient's identifier</Text>
+                    <Select
+                      style={{ width: 80 + '%' }}
+                      onChange={onChangePatient}
+                    >
+                      {patientArr.map((patientId) => (
+                        <Option key={patientId.id}>{patientId.id}</Option>
+                      ))}
+                    </Select>
+                  </Space>
                 </Col>
                 <Col xs={12} sm={8} md={8} lg={8} xl={8}>
-                  <Slider
-                    min={1}
-                    max={8}
-                    step={0.5}
-                    defaultValue={1}
-                    onChange={onChangeMinute}
-                  />
+                  <Space direction='vertical' style={{ width: '100%' }}>
+                    <Text type='secondary'>Prediction in minutes</Text>
+                    <Slider
+                      min={1}
+                      max={8}
+                      step={0.5}
+                      defaultValue={1}
+                      onChange={onChangeMinute}
+                    />
+                  </Space>
                 </Col>
                 <Col
                   xs={{ span: 11, offset: 1 }}
@@ -174,9 +215,12 @@ function App() {
                   lg={{ span: 6, offset: 1 }}
                   xl={{ span: 6, offset: 1 }}
                 >
-                  <Button type='primary' onClick={sendMessage}>
-                    Send
-                  </Button>
+                  <Space direction='vertical' style={{ width: '100%' }}>
+                    <Text type='secondary'></Text>
+                    <Button type='primary' onClick={sendMessage}>
+                      Send
+                    </Button>
+                  </Space>
                 </Col>
               </Row>
             </Card>
@@ -188,7 +232,13 @@ function App() {
         <Anchor>
           <Link
             href='https://github.com/vexagonverp/CM-Server'
-            title='Github'
+            title={
+              <GithubOutlined
+                style={{
+                  fontSize: 32,
+                }}
+              />
+            }
           />
         </Anchor>
       </Footer>
