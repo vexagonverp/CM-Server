@@ -176,6 +176,7 @@ function App() {
                   style={{
                     fontSize: 32,
                     padding: 20,
+                    color: '#FF0000',
                   }}
                 />
               ) : (
@@ -183,6 +184,7 @@ function App() {
                   style={{
                     fontSize: 32,
                     padding: 20,
+                    color: '#87d068',
                   }}
                 />
               )}
