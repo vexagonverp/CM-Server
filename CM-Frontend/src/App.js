@@ -207,7 +207,7 @@ function App() {
                     </Select>
                   </Space>
                 </Col>
-                <Col xs={12} sm={8} md={8} lg={8} xl={8}>
+                <Col xs={14} sm={8} md={8} lg={8} xl={8}>
                   <Space direction='vertical' style={{ width: '100%' }}>
                     <Text type='secondary'>
                       Predict next {minuteInput} minute&#40;s&#41;
@@ -223,8 +223,8 @@ function App() {
                   </Space>
                 </Col>
                 <Col
-                  xs={{ span: 11, offset: 1 }}
-                  sm={{ span: 7, offset: 1 }}
+                  xs={{ span: 9, offset: 1 }}
+                  sm={{ span: 6, offset: 1 }}
                   md={{ span: 6, offset: 1 }}
                   lg={{ span: 6, offset: 1 }}
                   xl={{ span: 6, offset: 1 }}
