@@ -109,9 +109,6 @@ function App() {
                 <Descriptions.Item label='Sex'>
                   {patientInfo.sex === 'female' ? 'Female' : 'Male'}
                 </Descriptions.Item>
-                <Descriptions.Item label='Health rating'>
-                  {patientInfo.healthType}
-                </Descriptions.Item>
               </Descriptions>
             </Card>
           </Col>
