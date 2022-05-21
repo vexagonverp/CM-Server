@@ -20,7 +20,7 @@ const io = new Server(server, {
   },
 });
 const dataServiceInstance = new dataService();
-
+dataServiceInstance.initDb();
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
@@ -34,8 +34,8 @@ app.post('/sendData', (req, res) => {
   res.send(obj);
 });
 
-app.get('/getKeys', (req, res) => {
-  const obj = dataServiceInstance.returnDataKey();
+app.get('/getKeys', async (req, res) => {
+  const obj = await dataServiceInstance.returnDataKey();
   res.send(obj);
 });
 

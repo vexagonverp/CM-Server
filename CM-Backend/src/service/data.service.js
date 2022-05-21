@@ -1,4 +1,9 @@
 const ARIMA = require('arima');
+const MongoClient = require('mongodb').MongoClient;
+
+const uri =
+  'mongodb+srv://verp:E0kwBsQ6Ak8yNwZZ@cloudmongo.d1voy.mongodb.net/?retryWrites=true&w=majority';
+const client = new MongoClient(uri);
 
 function dataService() {
   this.dataTable = new Map();
@@ -6,6 +11,64 @@ function dataService() {
   this.dataDefaultTimeInterval = 10;
   this.dataTimeInterval = 10;
 }
+
+dataService.prototype.initDb = async function () {
+  try {
+    await client.connect();
+    const obj = await client.db().admin().listDatabases();
+    const arrDb = obj.databases.filter((el) => {
+      return el.name == 'cm_database';
+    });
+    if (arrDb.length == 0) {
+      await client.db('cm_database').createCollection('patient');
+    }
+    if (
+      !client.db('cm_database').listCollections({ name: 'patient' }).hasNext()
+    ) {
+      await client.db('cm_database').createCollection('patient');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+dataService.prototype.closeDb = async function () {
+  try {
+    await client.close();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+dataService.prototype.findPatientFromId = async function (id) {
+  try {
+    if (!client.topology.isConnected()) {
+      await this.initDb();
+    }
+  } catch (error) {
+    await this.initDb();
+  }
+  const query = { patientId: id };
+  return await client.db('cm_database').collection('patient').findOne(query);
+};
+
+dataService.prototype.createPatientFromId = async function (id) {
+  try {
+    if (!client.topology.isConnected()) {
+      await this.initDb();
+    }
+  } catch (error) {
+    await this.initDb();
+  }
+  const query = {
+    patientId: id,
+    name: 'Unknown',
+    age: 21,
+    healthType: 'average',
+    sex: 'unknown',
+  };
+  return await client.db('cm_database').collection('patient').insertOne(query);
+};
 
 dataService.prototype.processRawData = function (obj) {
   if (obj.spO <= 80) {
@@ -34,7 +97,7 @@ dataService.prototype.processRawData = function (obj) {
   return obj;
 };
 
-dataService.prototype.addData = function (obj) {
+dataService.prototype.addData = async function (obj) {
   if (this.dataTable.has(obj.id)) {
     let dataArray = this.dataTable.get(obj.id);
     let dataObject = {
@@ -49,6 +112,7 @@ dataService.prototype.addData = function (obj) {
     }
     console.log(this.dataTable);
   } else {
+    await this.createPatientFromId(obj.id);
     let dataArray = [];
     let dataObject = {
       heartRate: obj.heartRate,
@@ -107,10 +171,18 @@ dataService.prototype.returnDataArray = function (id) {
   return this.dataTable.get(id);
 };
 
-dataService.prototype.returnDataKey = function () {
-  return Array.from(this.dataTable.keys()).map((el) => {
+dataService.prototype.returnDataKey = async function () {
+  arrPatient = Array.from(this.dataTable.keys()).map((el) => {
     return { id: el };
   });
+  for (const patient of arrPatient) {
+    const patientInfo = await this.findPatientFromId(patient.id);
+    patient.name = patientInfo.name;
+    patient.sex = patientInfo.sex;
+    patient.age = patientInfo.age;
+    patient.healthType = patientInfo.healthType;
+  }
+  return arrPatient;
 };
 
 module.exports = {

@@ -202,7 +202,7 @@ function App() {
                       onChange={onChangePatient}
                     >
                       {patientArr.map((patientId) => (
-                        <Option key={patientId.id}>{patientId.id}</Option>
+                        <Option key={patientId.id}>{patientId.name}</Option>
                       ))}
                     </Select>
                   </Space>
