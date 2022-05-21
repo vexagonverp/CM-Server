@@ -65,7 +65,7 @@ dataService.prototype.createPatientFromId = async function (id) {
     name: 'Unknown',
     age: 21,
     healthType: 'average',
-    sex: 'unknown',
+    sex: 'male',
   };
   return await client.db('cm_database').collection('patient').insertOne(query);
 };

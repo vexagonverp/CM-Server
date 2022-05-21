@@ -4,7 +4,6 @@ import {
   Button,
   Progress,
   Statistic,
-  Badge,
   Layout,
   Anchor,
   Row,
@@ -14,6 +13,7 @@ import {
   Space,
   Select,
   Slider,
+  Descriptions,
 } from 'antd';
 import {
   LinkOutlined,
@@ -35,6 +35,12 @@ function App() {
   const [minuteInput, setMinuteInput] = useState(1);
   const [minutePredict, setMinutePredict] = useState();
   const [patientId, setPatientId] = useState();
+  const [patientInfo, setPatientInfo] = useState({
+    name: '',
+    age: '',
+    sex: '',
+    healthType: '',
+  });
 
   const onChangeMinute = (value) => {
     setMinuteInput(value);
@@ -65,6 +71,13 @@ function App() {
         id: patientId,
         minute: minuteInput ? minuteInput : 1,
       };
+
+      patientArr.filter((el) => {
+        return el.id == patientId;
+      });
+      if (patientArr.length > 0) {
+        setPatientInfo(patientArr[0]);
+      }
       setMinutePredict(minuteInput ? minuteInput : 1);
       socketRef.current.emit('message', mes);
       socketRef.current.once('message', (dataGot) => {
@@ -81,8 +94,32 @@ function App() {
         <Row>
           <Col xs={1} sm={1} md={2} lg={3} xl={3}></Col>
           <Col xs={22} sm={22} md={20} lg={18} xl={18}>
+            <Card
+              title="Patient's information"
+              loading={loading}
+              style={{ marginTop: 32, marginBottom: 32 }}
+            >
+              <Descriptions>
+                <Descriptions.Item label='Name'>
+                  {patientInfo.name}
+                </Descriptions.Item>
+                <Descriptions.Item label='Age'>
+                  {patientInfo.age}
+                </Descriptions.Item>
+                <Descriptions.Item label='Sex'>
+                  {patientInfo.sex === 'female' ? 'Female' : 'Male'}
+                </Descriptions.Item>
+                <Descriptions.Item label='Health rating'>
+                  {patientInfo.healthType}
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+          </Col>
+          <Col xs={1} sm={1} md={2} lg={3} xl={3}></Col>
+          <Col xs={1} sm={1} md={2} lg={3} xl={3}></Col>
+          <Col xs={22} sm={22} md={20} lg={18} xl={18}>
             <Card title='Covid monitoring' loading={loading}>
-              <Divider orientation='left'>Patient's information</Divider>
+              <Divider orientation='left'>Patient's vitals</Divider>
               <Row>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
                   <Space direction='vertical'>
