@@ -123,6 +123,7 @@ function App() {
                     <Text type='secondary'>Heart Rate</Text>
                     <Progress
                       type='circle'
+                      status='normal'
                       strokeColor={{
                         '0%': '#FF0000',
                         '60%': '#87d068',
@@ -137,6 +138,7 @@ function App() {
                     <Text type='secondary'>SpO2</Text>
                     <Progress
                       type='circle'
+                      status='normal'
                       strokeColor={{
                         '0%': '#FF0000',
                         '90%': '#87d068',
