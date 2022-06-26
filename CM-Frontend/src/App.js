@@ -233,11 +233,19 @@ function App() {
                   {((
                     mess.predHeart *
                     ((100 + Math.abs(mess.errorHeart)) / 100)
-                  ).toFixed(2) < 90 ||
+                  ).toFixed(2) < 60 ||
                     (
                       mess.predHeart *
                       ((100 - Math.abs(mess.errorHeart)) / 100)
-                    ).toFixed(2) < 90) &&
+                    ).toFixed(2) < 60 ||
+                    (
+                      mess.predHeart *
+                      ((100 + Math.abs(mess.errorHeart)) / 100)
+                    ).toFixed(2) > 100 ||
+                    (
+                      mess.predHeart *
+                      ((100 - Math.abs(mess.errorHeart)) / 100)
+                    ).toFixed(2) > 100) &&
                   mess.errorHeart <= 25 ? (
                     <Alert
                       message="Patient's heart rate predictions abnormal !"
