@@ -172,15 +172,27 @@ function App() {
                   <Statistic
                     title='Predicted SpO2'
                     prefix={
-                      (
+                      ((
                         mess.predSpo *
                         ((100 - Math.abs(mess.errorSpo)) / 100)
-                      ).toFixed(2) + ' - '
+                      ).toFixed(2) >= 100
+                        ? 100
+                        : (
+                            mess.predSpo *
+                            ((100 - Math.abs(mess.errorSpo)) / 100)
+                          ).toFixed(2)) + ' - '
                     }
-                    value={(
-                      mess.predSpo *
-                      ((100 + Math.abs(mess.errorSpo)) / 100)
-                    ).toFixed(2)}
+                    value={
+                      (
+                        mess.predSpo *
+                        ((100 + Math.abs(mess.errorSpo)) / 100)
+                      ).toFixed(2) >= 100
+                        ? 100
+                        : (
+                            mess.predSpo *
+                            ((100 + Math.abs(mess.errorSpo)) / 100)
+                          ).toFixed(2)
+                    }
                     suffix='%'
                   />
                 </Col>
