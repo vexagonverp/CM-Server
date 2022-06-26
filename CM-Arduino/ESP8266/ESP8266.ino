@@ -73,6 +73,7 @@ void loop() {
         int httpResponseCode = http.POST(json);
         if (httpResponseCode != 200) {
           Serial.println(user_wifi.server);
+          Serial.println(httpResponseCode);
           Serial.println("Starting API server");
           WiFi.mode(WIFI_AP);
           WiFi.softAP("Setup Api", "password");
