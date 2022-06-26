@@ -14,6 +14,7 @@ import {
   Select,
   Slider,
   Descriptions,
+  Alert,
 } from 'antd';
 import {
   LinkOutlined,
@@ -209,6 +210,58 @@ function App() {
                     value={Math.abs(mess.errorSpo).toFixed(2)}
                     suffix='%'
                   />
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  {mess.heartRate < 60 || mess.heartRate > 100 ? (
+                    <Alert
+                      message="Patient's heart rate metrics abnormal !"
+                      type='error'
+                      showIcon
+                    />
+                  ) : null}
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  {mess.spO < 90 ? (
+                    <Alert
+                      message="Patient's SpO2 metrics abnormal !"
+                      type='error'
+                      showIcon
+                    />
+                  ) : null}
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  {((
+                    mess.predHeart *
+                    ((100 + Math.abs(mess.errorHeart)) / 100)
+                  ).toFixed(2) < 90 ||
+                    (
+                      mess.predHeart *
+                      ((100 - Math.abs(mess.errorHeart)) / 100)
+                    ).toFixed(2) < 90) &&
+                  mess.errorHeart <= 25 ? (
+                    <Alert
+                      message="Patient's heart rate predictions abnormal !"
+                      type='warning'
+                      showIcon
+                    />
+                  ) : null}
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  {((
+                    mess.predSpo *
+                    ((100 + Math.abs(mess.errorSpo)) / 100)
+                  ).toFixed(2) < 90 ||
+                    (
+                      mess.predSpo *
+                      ((100 - Math.abs(mess.errorSpo)) / 100)
+                    ).toFixed(2) < 90) &&
+                  mess.errorSpo <= 25 ? (
+                    <Alert
+                      message="Patient's SpO2 predictions abnormal !"
+                      type='warning'
+                      showIcon
+                    />
+                  ) : null}
                 </Col>
               </Row>
             </Card>
