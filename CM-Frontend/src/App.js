@@ -147,6 +147,14 @@ function App() {
                       percent={mess.spO}
                     />
                   </Space>
+                  {/* <Progress
+                    status='normal'
+                    strokeColor={{
+                      '0%': '#FF0000',
+                      '90%': '#87d068',
+                    }}
+                    percent={mess.spO}
+                  /> */}
                 </Col>
               </Row>
               <Divider orientation='left'>
